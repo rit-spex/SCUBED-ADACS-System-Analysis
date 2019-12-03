@@ -38,8 +38,10 @@ T_earth = 2*pi*(mu_earth)^(-1/2)*(orbit_altitude + earth_radius)^(3/2);
 
 %% Simulink Simulation
 % Initial Conditions
-t = 2*T_earth; % simulation runtime
+t = 20*T_earth; % simulation runtime
 dt = 0.001;
+clock_decimation = 1000;
+vector_decimation = 1000;
 
 Mgx = 10^-11; % [Nm] - Solar pressure
 Mgy = 10^-11; % [Nm] - Solar pressure
@@ -63,8 +65,8 @@ omega3_i = 0; % Initial conditions of wheel 3 at t = 0
 
 % Body Angular Velocity
 omega_x = 2*pi/T_EHO;
-omega_y = 2*pi/T_earth;
-omega_z = Mgz/I;
+omega_y = 0;
+omega_z = 0;
 alpha_x = 0;
 alpha_y = 0;
 alpha_z = 0;
@@ -73,7 +75,7 @@ alpha_z = 0;
 Simulation = sim('Momentum_Wheel_Model');
 
 % Extract results
-tout = Simulation.omega_1.time;
+time = Simulation.omega_1.time;
 omega_1 = Simulation.omega_1.signals.values;
 omega_2 = Simulation.omega_2.signals.values;
 omega_3 = Simulation.omega_3.signals.values;
@@ -85,15 +87,15 @@ omega_magnitude = sqrt(omega_1.^2 + omega_2.^2 + omega_3.^2);
 rpm_conversion = 60/(2*pi);
 
 hold on
-plot(tout,omega_1.*rpm_conversion);
-plot(tout,omega_2.*rpm_conversion);
-plot(tout,omega_3.*rpm_conversion);
-plot(tout,omega_magnitude.*rpm_conversion,'--');
+plot(time,omega_1.*rpm_conversion);
+plot(time,omega_2.*rpm_conversion);
+plot(time,omega_3.*rpm_conversion);
+plot(time,omega_magnitude.*rpm_conversion,'--');
 hold off
 grid on
 xlabel('Time');
 ylabel('\omega');
 legend('\omega_1','\omega_2', '\omega_3','\omega_{RMS}');
 title('Outputs vs. Time');
-xlim([0 max(tout)]);
+xlim([0 max(time)]);
 

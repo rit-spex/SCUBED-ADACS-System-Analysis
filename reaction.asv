@@ -1,0 +1,19 @@
+%{
+    Title: Single Reaction Wheel Control Model
+    Author: James Parkus
+    Date: 12/2/19
+    Purpose: Provide a reaction for a given wheel spin for the S-CUBED
+    Cubesat preliminary ADACS system model.
+
+    Input: Angular 
+%}
+
+
+function [w_body] = reaction(w_fly)
+
+I_c = 0.05;
+I_w = 2*10^-3;
+
+w_body = w_fly/(-(1 + I_c/I_w));
+
+end
